@@ -248,19 +248,9 @@ exports.changePassword = async (req, res) => {
         }
 
         // find user by id
-        try {
-            const decode = await jwt.verify(token, process.env.JWT_SECRET);
-            console.log(decode);
-            req.user = decode;
-        } catch (error) {
-            // verification issue
-            return res.status(401).json({
-                success: false,
-                message: 'Token invalid'
-            })
-        }
-        const userId = req.user._id;
-        const user = await User.findById(userId);
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decode.id);
 
         if(!user) {
             return res.status(404).json({
